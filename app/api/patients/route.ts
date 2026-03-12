@@ -29,7 +29,7 @@ export async function GET(req: NextRequest) {
         select: { patientId: true },
         distinct: ["patientId"],
       });
-      where.id = { in: patientIds.map((p) => p.patientId) };
+      where.id = { in: patientIds.map((p: { patientId: string }) => p.patientId) };
     }
 
     const patients = await prisma.patient.findMany({
