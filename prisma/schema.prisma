@@ -1,0 +1,121 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id            String         @id @default(cuid())
+  name          String
+  email         String         @unique
+  password      String
+  role          String         @default("RECEPTIONIST") // RECEPTIONIST | DOCTOR
+  avatar        String?
+  phone         String?
+  createdAt     DateTime       @default(now())
+  doctor        Doctor?
+  notifications Notification[]
+  auditLogs     AuditLog[]
+}
+
+model Doctor {
+  id                 String        @id @default(cuid())
+  userId             String        @unique
+  user               User          @relation(fields: [userId], references: [id])
+  specialization     String
+  qualification      String
+  bio                String?
+  slotDurationMins   Int           @default(30)
+  workingDays        String        @default("[1,2,3,4,5]") // JSON array of day numbers (0=Sun, 1=Mon...)
+  workingHoursStart  String        @default("09:00")
+  workingHoursEnd    String        @default("17:00")
+  isAvailable        Boolean       @default(true)
+  consultationFee    Float         @default(500)
+  telegramChatId     String?
+  telegramLinked     Boolean       @default(false)
+  telegramReminders  Boolean       @default(true)
+  appointments       Appointment[]
+  leaves             DoctorLeave[]
+  telegramSessions   TelegramSession[]
+}
+
+model Patient {
+  id             String        @id @default(cuid())
+  name           String
+  phone          String
+  email          String?
+  dateOfBirth    DateTime?
+  gender         String?
+  bloodGroup     String?
+  address        String?
+  medicalHistory String?
+  createdAt      DateTime      @default(now())
+  appointments   Appointment[]
+}
+
+model Appointment {
+  id           String   @id @default(cuid())
+  patientId    String
+  patient      Patient  @relation(fields: [patientId], references: [id])
+  doctorId     String
+  doctor       Doctor   @relation(fields: [doctorId], references: [id])
+  date         DateTime
+  timeSlot     String   // e.g. "09:00"
+  status       String   @default("PENDING") // PENDING | CONFIRMED | CANCELLED | COMPLETED | NO_SHOW
+  type         String   @default("IN_PERSON") // IN_PERSON | TELECONSULT
+  priority     String   @default("NORMAL") // NORMAL | URGENT
+  symptoms     String?
+  notes        String?
+  prescription String?
+  followUpDate DateTime?
+  createdBy    String?
+  reminderSent Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  title     String
+  message   String
+  type      String   @default("INFO") // INFO | BOOKING | CANCELLATION | REMINDER
+  read      Boolean  @default(false)
+  link      String?
+  createdAt DateTime @default(now())
+}
+
+model DoctorLeave {
+  id       String @id @default(cuid())
+  doctorId String
+  doctor   Doctor @relation(fields: [doctorId], references: [id])
+  date     DateTime
+  reason   String?
+
+  @@unique([doctorId, date])
+}
+
+model TelegramSession {
+  id               String   @id @default(cuid())
+  doctorId         String
+  doctor           Doctor   @relation(fields: [doctorId], references: [id])
+  verificationCode String
+  verified         Boolean  @default(false)
+  expiresAt        DateTime
+  createdAt        DateTime @default(now())
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  action    String
+  entity    String
+  entityId  String?
+  metadata  String?
+  createdAt DateTime @default(now())
+}
