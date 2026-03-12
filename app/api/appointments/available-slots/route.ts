@@ -62,7 +62,7 @@ export async function GET(req: NextRequest) {
       },
       select: { timeSlot: true },
     });
-    const bookedSlots = bookedAppointments.map((a) => a.timeSlot);
+    const bookedSlots = bookedAppointments.map((a: { timeSlot: string }) => a.timeSlot);
 
     // Filter past slots for today
     const now = new Date();
