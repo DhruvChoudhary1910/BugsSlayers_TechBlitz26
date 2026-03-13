@@ -10,16 +10,13 @@
 MediSchedule is a full-stack web application designed to streamline clinic operations. Built with modern web technologies, it features dedicated workflows for both Receptionists and Doctors, backed by a robust automated slot-generation engine with real-time clash detection.
 
 ## 📸 Previews
-
-> 📸 *Tip: Add a high-quality GIF or screenshot of the dashboard here.*
+![Login Page Preview]](9b8b9fb1-a33c-4e4f-9d23-8a9ac6e77f67.jpg)
 
 ### Receptionist Dashboard
-> 📸 *Placeholder: Image showing the timeline view and appointment data table.*
+![Reception's side Dashboard Preview]](3e2eb165-1842-4a53-b737-768c1f3a8506.jpg)
 
 ### Doctor Dashboard
-> 📸 *Placeholder: Image showing the daily queue, prescription modal, and availability calendar.*
-
----
+[Doctor's side Dashboard Preview]](37abf86c-03ba-4942-9f62-3de1ff26fe47.jpg)
 
 ## 🚀 Features
 
