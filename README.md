@@ -1,36 +1,91 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MediSchedule
+> **A high-performance, role-based clinic management and intelligent appointment scheduling system.**
 
-## Getting Started
+![Next.js](https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![Prisma](https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white)
+![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)
+![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen.svg?style=for-the-badge)
 
-First, run the development server:
+MediSchedule is a full-stack web application designed to streamline clinic operations. Built with modern web technologies, it features dedicated workflows for both Receptionists and Doctors, backed by a robust automated slot-generation engine with real-time clash detection.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 📸 Previews
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+> 📸 *Tip: Add a high-quality GIF or screenshot of the dashboard here.*
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Receptionist Dashboard
+> 📸 *Placeholder: Image showing the timeline view and appointment data table.*
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Doctor Dashboard
+> 📸 *Placeholder: Image showing the daily queue, prescription modal, and availability calendar.*
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 🚀 Features
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Role-Specific Workflows
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| 👩‍💼 Receptionist (Admin) | 👨‍⚕️ Doctor (Provider) |
+| :--- | :--- |
+| **Complete Appointment CRUD:** Book, reschedule, cancel, and filter all appointments. | **Daily Queue:** View today's schedule at a glance with one-click status updates (Complete/No-Show). |
+| **Patient Management:** Create and maintain detailed patient records. | **Clinical Actions:** Add prescriptions and set follow-up dates directly from the queue. |
+| **Timeline View:** Visual representation of today's schedule across the clinic. | **Schedule Management:** Toggle availability and manage leave/blocked days on the calendar. |
+| **Bulk Actions:** Manage multiple records simultaneously. | **Patient History:** Access historical clinical data and past visits for context. |
+| **Data Export:** Export schedules and patient lists to CSV. | **Priority Alerts:** Visual indicators for urgent appointments. |
 
-## Deploy on Vercel
+### Shared System Features
+* **Secure Authentication:** JWT-based sessions with `NextAuth.js v5` and strict role-based routing.
+* **Smart Notifications:** Real-time notification bell with unread counters and global toast alerts.
+* **Modern UI/UX:** Responsive sidebar layout, dark mode support, and loading skeletons for seamless data fetching.
+* **Intelligent Scheduling:** Automated slot generation respecting clinic hours, doctor leaves, and existing bookings.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🛠 Tech Stack
+
+| Category | Technology | Purpose |
+| :--- | :--- | :--- |
+| **Frontend** | Next.js 14 (App Router) | React framework utilizing Server Components for performance. |
+| **Language** | TypeScript | End-to-end type safety reducing runtime errors. |
+| **Styling** | Tailwind CSS | Utility-first CSS for rapid, responsive UI development. |
+| **UI Components** | shadcn/ui | Accessible, customizable radix-based components. |
+| **Backend / API** | Next.js Route Handlers | RESTful API architecture running on Edge/Node runtime. |
+| **Database** | SQLite | Lightweight, zero-configuration database (ideal for local/hackathon). |
+| **ORM** | Prisma | Strongly typed database client and schema migrations. |
+| **Authentication** | NextAuth.js (Auth.js) v5 | Secure, credential-based session management. |
+| **Data Viz** | recharts | Rendering dashboard analytics and statistics. |
+| **Utilities** | date-fns, lucide-react | Timezone-aware date manipulation and SVG iconography. |
+
+---
+
+## 🏗 Architecture Overview
+
+MediSchedule leverages the **Next.js 14 App Router** to strictly separate server-side logic from client-side interactivity. By defaulting to React Server Components (RSCs), we securely fetch data directly from the Prisma database, significantly reducing the JavaScript bundle sent to the browser. Client components (`"use client"`) are strictly reserved for interactive UI elements like modals, toast notifications, and forms.
+
+The application enforces security via **Role-Based Middleware**, which intercepts requests at the edge to ensure users can only access their respective dashboards and API routes. The backend APIs are structured as standard RESTful Route Handlers, communicating with an SQLite database via Prisma. The core of the application is the **Scheduling Engine**, a custom utility that dynamically calculates available time slots based on a doctor's standard working hours, actively subtracting existing bookings and registered leave days to prevent double-booking.
+
+---
+
+## 📂 Project Structure
+
+```text
+📦 medischedule
+ ┣ 📂 prisma               # Database schema and migration files
+ ┣ 📂 public               # Static assets (images, icons)
+ ┣ 📂 src
+ ┃ ┣ 📂 app                # Next.js App Router (Pages, Layouts, API routes)
+ ┃ ┃ ┣ 📂 (auth)           # Login pages (grouped route)
+ ┃ ┃ ┣ 📂 (dashboard)      # Authenticated layouts
+ ┃ ┃ ┃ ┣ 📂 doctor         # Doctor-specific pages
+ ┃ ┃ ┃ ┗ 📂 receptionist   # Receptionist-specific pages
+ ┃ ┃ ┣ 📂 api              # RESTful Route Handlers
+ ┃ ┣ 📂 components         # Reusable React components
+ ┃ ┃ ┣ 📂 ui               # shadcn/ui components
+ ┃ ┃ ┗ 📂 shared           # Layouts, Skeletons, Navigation
+ ┃ ┣ 📂 lib                # Core utilities
+ ┃ ┃ ┣ 📜 auth.ts          # NextAuth v5 configuration
+ ┃ ┃ ┣ 📜 prisma.ts        # Prisma client singleton
+ ┃ ┃ ┗ 📜 scheduling.ts    # Slot generation & clash detection logic
+ ┃ ┗ 📂 types              # Global TypeScript interfaces
+ ┣ 📜 .env.example         # Environment variables template
+ ┗ 📜 package.json         # Dependencies and scripts
