@@ -10,13 +10,13 @@
 MediSchedule is a full-stack web application designed to streamline clinic operations. Built with modern web technologies, it features dedicated workflows for both Receptionists and Doctors, backed by a robust automated slot-generation engine with real-time clash detection.
 
 ## 📸 Previews
-![Login Page Preview]](9b8b9fb1-a33c-4e4f-9d23-8a9ac6e77f67.jpg)
+![WhatsApp Image 2026-03-13 at 1 08 09 PM](https://github.com/user-attachments/assets/55638b39-4eb7-429e-ad86-3c74d47cda89)
 
 ### Receptionist Dashboard
-![Reception's side Dashboard Preview]](3e2eb165-1842-4a53-b737-768c1f3a8506.jpg)
+![WhatsApp Image 2026-03-13 at 1 07 49 PM](https://github.com/user-attachments/assets/503cc19b-e124-42c8-942b-5e7247a0c05a)
 
 ### Doctor Dashboard
-[Doctor's side Dashboard Preview]](37abf86c-03ba-4942-9f62-3de1ff26fe47.jpg)
+![WhatsApp Image 2026-03-13 at 1 08 41 PM](https://github.com/user-attachments/assets/d9168f95-04db-4257-8571-e0c6fb5cb062)
 
 ## 🚀 Features
 
@@ -36,7 +36,6 @@ MediSchedule is a full-stack web application designed to streamline clinic opera
 * **Modern UI/UX:** Responsive sidebar layout, dark mode support, and loading skeletons for seamless data fetching.
 * **Intelligent Scheduling:** Automated slot generation respecting clinic hours, doctor leaves, and existing bookings.
 
----
 
 ## 🛠 Tech Stack
 
@@ -53,7 +52,6 @@ MediSchedule is a full-stack web application designed to streamline clinic opera
 | **Data Viz** | recharts | Rendering dashboard analytics and statistics. |
 | **Utilities** | date-fns, lucide-react | Timezone-aware date manipulation and SVG iconography. |
 
----
 
 ## 🏗 Architecture Overview
 
@@ -61,7 +59,6 @@ MediSchedule leverages the **Next.js 14 App Router** to strictly separate server
 
 The application enforces security via **Role-Based Middleware**, which intercepts requests at the edge to ensure users can only access their respective dashboards and API routes. The backend APIs are structured as standard RESTful Route Handlers, communicating with an SQLite database via Prisma. The core of the application is the **Scheduling Engine**, a custom utility that dynamically calculates available time slots based on a doctor's standard working hours, actively subtracting existing bookings and registered leave days to prevent double-booking.
 
----
 
 ## 📂 Project Structure
 
@@ -87,7 +84,6 @@ The application enforces security via **Role-Based Middleware**, which intercept
  ┣ 📜 .env.example         # Environment variables template
  ┗ 📜 package.json         # Dependencies and scripts
 
----
 
 ## 🤖 Telegram Bot Integration
 [![Telegram Bot](https://img.shields.io/badge/Telegram_Bot-@Mediflow123__bot-2CA5E0?style=for-the-badge&logo=telegram)](https://t.me/Mediflow123_bot)
