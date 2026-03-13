@@ -89,3 +89,53 @@ The application enforces security via **Role-Based Middleware**, which intercept
  ┃ ┗ 📂 types              # Global TypeScript interfaces
  ┣ 📜 .env.example         # Environment variables template
  ┗ 📜 package.json         # Dependencies and scripts
+
+---
+
+## 🤖 Telegram Bot Integration
+[![Telegram Bot](https://img.shields.io/badge/Telegram_Bot-@Mediflow123__bot-2CA5E0?style=for-the-badge&logo=telegram)](https://t.me/Mediflow123_bot)
+
+MediSchedule features a fully integrated Telegram Bot designed specifically for Doctors. It provides real-time alerts, daily schedule summaries, and secure on-demand access to clinic data directly from Telegram.
+
+### How It Works
+
+The integration uses a secure 3-step linkage process to map a Doctor's authenticated web session to their personal Telegram chat:
+
+1. **Generate Code:** The Doctor clicks "Connect Telegram" in their dashboard settings. The API generates a secure, 6-digit `verificationCode` tied to their `doctorId` and stores it in the `TelegramSession` database table (expires in 10 minutes).
+2. **Send to Bot:** The Doctor opens the Telegram bot and sends `/verify <CODE>`.
+3. **Link Established:** The bot verifies the code against the database, extracts the Telegram `chatId`, saves it to the `Doctor` model (`telegramLinked = true`), and deletes the session code.
+
+Once linked, Next.js API route handlers trigger fire-and-forget background notifications to the bot whenever a receptionist updates the clinic schedule.
+
+### Bot Commands Reference
+
+| Command | Description | Auth Required |
+| :--- | :--- | :--- |
+| `/start` | Welcome message and setup instructions. | No |
+| `/verify CODE` | Links the Doctor's Next.js account to Telegram using a 6-digit code. | No |
+| `/today` | Fetches the full schedule for today with status emojis. | Yes |
+| `/upcoming` | Lists the next 5 upcoming appointments across all dates. | Yes |
+| `/next` | Displays the single next pending appointment with a countdown. | Yes |
+| `/summary` | Shows daily statistics (completed, pending, cancelled, no-show, earnings). | Yes |
+| `/patients` | Monthly patient volume and new patients added this week. | Yes |
+| `/cancel` | Returns a numbered list of pending appointments; reply to cancel. | Yes |
+| `/reminders on\|off` | Toggles automatic 30-minute pre-appointment reminders. | Yes |
+| `/unlink` | Disconnects the Telegram account and halts all notifications. | Yes |
+| `/help` | Displays the full command reference menu. | No |
+
+### Automatic Notifications
+
+Notifications are triggered asynchronously via API route handlers.
+
+| Trigger Event | Notification Type | Message Format Summary |
+| :--- | :--- | :--- |
+| **New Booking** | `POST /api/appointments` | Patient name, time slot, listed symptoms. |
+| **Urgent Booking** | `POST /api/appointments` | 🚨 Urgent header, patient details, immediate review prompt. |
+| **Cancellation** | `PATCH /api/appointments/[id]` | Alert that a slot has opened up + cancelled patient name. |
+| **Reschedule** | `PATCH /api/appointments/[id]` | Comparison of old date/time vs. new date/time. |
+
+### Scheduled Messages
+
+The bot runs a lightweight internal scheduler (`setInterval`) initialized on server boot:
+* **Morning Summary (8:00 AM):** Automatically pulls the day's schedule and sends a morning brief if the doctor has appointments booked for that day.
+* **30-Minute Reminders:** Scans for appointments starting in exactly 30 minutes. To guarantee idempotency and prevent duplicate pings during Next.js hot-reloads or polling restarts, it checks and updates a `reminderSent` boolean on the `Appointment` model.
